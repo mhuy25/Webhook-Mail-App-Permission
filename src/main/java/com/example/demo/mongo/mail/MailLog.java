@@ -19,6 +19,7 @@ public class MailLog {
     private String content;
     private String from;
     private String to;
+    private String cc;
     private String receivedDateTime;
     private LocalDateTime timestamp;
 }

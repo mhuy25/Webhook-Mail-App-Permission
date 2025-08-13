@@ -18,6 +18,7 @@ public class KafkaMailMessage extends KafkaMessageDto {
     String content;
     String from;
     private List<String> to;
+    private List<String> cc;
     private String receivedDateTime;
     private List<AttachmentInfo> attachments;
 }

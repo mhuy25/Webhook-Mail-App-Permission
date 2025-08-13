@@ -26,8 +26,8 @@ public class GraphNotificationService {
     private final EventProducer eventProducer;
     private final GraphSubscriptionService graphSubscriptionService;
 
-    public void SendToKafka(KafkaMailMessage message) {
-        eventProducer.produceEvent(KafkaTopic.RECEIVED_EMAIL,message);
+    public void SendToKafka(KafkaMailMessage message, String messageId) {
+        eventProducer.produceEvent(KafkaTopic.RECEIVED_EMAIL,messageId,message);
     }
 
     public KafkaMailMessage getMailDetail(String userId, String messageId) {
@@ -38,11 +38,11 @@ public class GraphNotificationService {
             HttpEntity<?> entity = new HttpEntity<>(headers);
 
             String url = "https://graph.microsoft.com/v1.0/users/" + userId
-                    + "/messages/" + messageId
-                    + "?$select=subject,receivedDateTime,from,toRecipients,body";
+                    + "/messages/" + messageId;
 
             ResponseEntity<Map> resp = rest.exchange(url, HttpMethod.GET, entity, Map.class);
             Map<String, Object> body = resp.getBody();
+            System.out.println(body);
             if (body == null) {
                 throw new IllegalStateException("No body data from Graph API for messageId: " + messageId);
             }
@@ -91,6 +91,15 @@ public class GraphNotificationService {
             }
         }
         mc.setTo(toList);
+        List<String> ccList = new ArrayList<>();
+        List<Map<String, Object>> ccRecipients = (List<Map<String, Object>>) mail.get("ccRecipients");
+        if (ccRecipients != null) {
+            for (Map<String, Object> r : ccRecipients) {
+                Map<String, Object> emailAddress = (Map<String, Object>) r.get("emailAddress");
+                if (emailAddress != null) ccList.add((String) emailAddress.get("address"));
+            }
+        }
+        mc.setCc(ccList);
         String rdt = (String) mail.get("receivedDateTime");
         if (rdt != null && !rdt.isBlank()) {
             OffsetDateTime odt = OffsetDateTime.parse(rdt);

@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document("mail_logs")
+@Document("dlt_logs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

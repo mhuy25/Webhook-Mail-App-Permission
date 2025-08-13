@@ -32,7 +32,7 @@ public class WebhookController extends RestfulController{
                     String userId = graphNotificationService.parseUserIdFromResource(notification.getResource());
                     String messageId = graphNotificationService.parseMessageIdFromResource(notification.getResource());
                     KafkaMailMessage content = graphNotificationService.getMailDetail(userId, messageId);
-                    graphNotificationService.SendToKafka(content);
+                    graphNotificationService.SendToKafka(content, messageId);
                 }
                 response.setStatus(200);
             }
