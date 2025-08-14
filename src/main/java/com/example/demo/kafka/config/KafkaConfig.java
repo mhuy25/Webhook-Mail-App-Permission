@@ -29,7 +29,6 @@ public class KafkaConfig {
      * Container factory cho @KafkaListener:
      * - AckMode MANUAL_IMMEDIATE: commit offset sau khi xử lý thành công (At-least-once)
      * - DefaultErrorHandler: retry 3 lần với delay 1s; sau đó đẩy vào DLT
-     * - DLT topic mặc định: KafkaTopic.DLT cùng partition
      */
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, KafkaMailMessage> kafkaListenerContainerFactory(
