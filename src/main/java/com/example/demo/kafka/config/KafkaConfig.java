@@ -27,7 +27,7 @@ public class KafkaConfig {
 
     /**
      * Container factory cho @KafkaListener:
-     * - AckMode MANUAL_IMMEDIATE: commit offset sau khi xử lý thành công (At-least-once)
+     * - AckMode MANUAL_IMMEDIATE: comm  lý thành công (At-least-once)
      * - DefaultErrorHandler: retry 3 lần với delay 1s; sau đó đẩy vào DLT
      */
     @Bean
@@ -48,7 +48,7 @@ public class KafkaConfig {
         );
         // retry 3 lần, mỗi lần cách 1000ms
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(recover, new FixedBackOff(1000L, 3L));
-
+        errorHandler.setCommitRecovered(true);
         factory.setCommonErrorHandler(errorHandler);
         return factory;
     }
@@ -62,7 +62,7 @@ public class KafkaConfig {
 
         // At-least-once: commit tay
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
-        // retry 3 lần, mỗi lần cách 1000ms
+
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(new FixedBackOff(0L, 0L));
 
         factory.setCommonErrorHandler(errorHandler);
